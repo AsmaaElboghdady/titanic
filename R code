@@ -1,0 +1,33 @@
+setwd("C:/Users/Admin/Desktop/R")
+all <- read.csv("tit.csv")
+
+#Splitting data into train and test
+
+train <- tit[1:891,]
+test <-  tit[893:1310,]
+
+#transforming the numeric columns into factors {for all the data set} once, 
+# if you factorize test set for example alone, and run the model to predict--> you might get an error, so factorize all the data then split.
+tit$survivrd.weight <- as.character(tit$survivrd.weight)
+tit$survivrd.weight <- as.factor(tit$survivrd.weight)
+tit$Survived <- as.character(tit$Survived)
+tit$Survived <- as.factor(tit$Survived)
+tit$Pclass <- as.character(tit$Pclass)
+tit$Pclass <- as.factor(tit$Pclass)
+tit$SibSp <- as.character(tit$SibSp)
+tit$SibSp <- as.factor(tit$SibSp)
+tit$Parch <- as.factor(tit$Parch)
+tit$Sex <- as.character(tit$Sex)
+tit$Sex <- as.factor(tit$Sex)
+
+install.packages("randomForest")
+library(randomForest)
+
+#fixing missing values by random forest
+train <- na.roughfix(train)
+test <- na.roughfix(test)
+
+model <- randomForest(train$Survived~., data=train)
+pred = predict(model, newdata=test)
+
+
